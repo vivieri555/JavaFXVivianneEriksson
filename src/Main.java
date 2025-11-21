@@ -8,6 +8,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.concurrent.atomic.AtomicInteger;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -22,8 +24,8 @@ public class Main extends Application {
         stage.setTitle("Medlemmarna");
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
-        gridPane.setVgap(8);
-        gridPane.setHgap(10);
+        gridPane.setVgap(12);
+        gridPane.setHgap(12);
 
         Label firstLabel = new Label("Ange förnamn:");
         gridPane.setConstraints(firstLabel, 0, 1);
@@ -58,9 +60,9 @@ public class Main extends Application {
 
 
         Button saveMember = new Button("Spara medlem");
-        gridPane.setConstraints(saveMember, 10, 10);
+        gridPane.setConstraints(saveMember, 1, 10);
 
-        Label newMember = new Label("Skriv in ny medlem");
+        Label newMember = new Label("Välkommen, fyll i ny medlem");
         Label saveInLabel = new Label();
 
         saveMember.setOnAction(e -> {
@@ -68,12 +70,54 @@ public class Main extends Application {
             String s = "Sparat: " + firstName.getText() + ", " + lastName.getText() + ", " + phoneNumber.getText() + ", "
                     + adressText.getText() + ", " + postText.getText() + ", " + postAdressText.getText();
             saveInLabel.setText(s);
-            gridPane.setConstraints(saveInLabel, 1, 8);
+            gridPane.setConstraints(saveInLabel, 1, 7);
         });
 
-        gridPane.getChildren().addAll(firstLabel, firstName, lastLabel, lastName, phoneLabel, phoneNumber,
-                adressLabel, adressText, postLabel, postText, postAdressLabel, postAdressText, saveMember, saveInLabel, newMember);
-        Scene scene = new Scene(gridPane, 300, 500);
+        Button start = new Button("Starta");
+        gridPane.setConstraints(start, 1, 11);
+        Label countL = new Label();
+
+        Button stop = new Button("Stopp");
+        gridPane.setConstraints(stop, 2, 11);
+
+        AtomicInteger counter = new AtomicInteger(0);
+
+                start.setOnAction(e -> {
+                    boolean running = (true);
+                    while (running) {
+                        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+                        try {
+                            counter.incrementAndGet();
+                            Thread.sleep(1000);
+                            String time = format.format(counter.get());
+                            countL.setText(time);
+                            if (stop.isPressed()) {
+                                running = false;
+                                stop.setOnAction(ev -> {
+                                });
+                            }
+                        } catch (InterruptedException ex) {
+                        }
+                    }    
+            });
+            //new MyThread().start();
+
+            //Tidtagarur
+            //trhreed sleep 1000 = sek
+            //label
+            //0000 sen sover tråden i en sekund 0001, atomicInteger som räknare, för att bli trådsäkert while loop
+            //låt tråden sova, sen öka, sen skriv ut i en Label
+            //stop.setCommand () stoppa loopen med en boolean
+            class MyThread extends Thread {
+                public void run() {
+                }
+            }
+        gridPane.getChildren().
+
+            addAll(firstLabel, firstName, lastLabel, lastName, phoneLabel, phoneNumber,
+                   adressLabel, adressText, postLabel, postText, postAdressLabel, postAdressText, saveMember, saveInLabel, newMember, start, stop, countL);
+
+            Scene scene = new Scene(gridPane, 300, 500);
         stage.setScene(scene);
         stage.show();
 
