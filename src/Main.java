@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import java.awt.*;
 
 public class Main extends Application {
 
@@ -24,14 +23,14 @@ public class Main extends Application {
         gridPane.setVgap(12);
         gridPane.setHgap(12);
 
-        Label firstLabel = new Label("Ange förnamn:");
-        gridPane.setConstraints(firstLabel, 0, 1);
+        Label firstNameLabel = new Label("Ange förnamn:");
+        gridPane.setConstraints(firstNameLabel, 0, 1);
         TextField firstName = new TextField();
         firstName.setPromptText("Förnamn");
         gridPane.setConstraints(firstName, 1, 1);
 
-        Label lastLabel = new Label("Ange Efternamn:");
-        gridPane.setConstraints(lastLabel, 0, 2);
+        Label lastNameLabel = new Label("Ange Efternamn:");
+        gridPane.setConstraints(lastNameLabel, 0, 2);
         TextField lastName = new TextField();
         lastName.setPromptText("Efternamn");
         gridPane.setConstraints(lastName, 1, 2);
@@ -39,21 +38,25 @@ public class Main extends Application {
         Label phoneLabel = new Label("Ange telefonnummer:");
         gridPane.setConstraints(phoneLabel, 0, 3);
         TextField phoneNumber = new TextField();
+        phoneNumber.setPromptText("Telefonnummer");
         gridPane.setConstraints(phoneNumber, 1, 3);
 
-        Label adressLabel = new Label("Ange adress:");
+        Label adressLabel = new Label("Ange gatuadress:");
         gridPane.setConstraints(adressLabel, 0, 4);
         TextField adressText = new TextField();
+        adressText.setPromptText("Gatuadress");
         gridPane.setConstraints(adressText, 1, 4);
 
-        Label postLabel = new Label("Ange postnummer:");
-        gridPane.setConstraints(postLabel, 0, 5);
+        Label postNumberLabel = new Label("Ange postnummer:");
+        gridPane.setConstraints(postNumberLabel, 0, 5);
         TextField postText = new TextField();
+        postText.setPromptText("Postnummer");
         gridPane.setConstraints(postText, 1, 5);
 
         Label postAdressLabel = new Label("Ange postadress");
         gridPane.setConstraints(postAdressLabel, 0, 6);
         TextField postAdressText = new TextField();
+        postAdressText.setPromptText("Postadress");
         gridPane.setConstraints(postAdressText, 1, 6);
 
         Button saveMember = new Button("Spara medlem");
@@ -92,11 +95,11 @@ public class Main extends Application {
         stopButton.setOnAction(e -> {
             timer.stop();
         });
-        gridPane.getChildren().addAll(firstLabel, firstName, lastLabel, lastName, phoneLabel, phoneNumber,
-                adressLabel, adressText, postLabel, postText, postAdressLabel, postAdressText,
+        gridPane.getChildren().addAll(firstNameLabel, firstName, lastNameLabel, lastName, phoneLabel, phoneNumber,
+                adressLabel, adressText, postNumberLabel, postText, postAdressLabel, postAdressText,
                 saveMember, saveInLabel, newMember, startButton, stopButton, timerLabel);
 
-        Scene scene = new Scene(gridPane, 500, 600);
+        Scene scene = new Scene(gridPane, 800, 600);
         stage.setScene(scene);
         stage.show();
     }
