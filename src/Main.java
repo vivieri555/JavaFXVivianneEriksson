@@ -1,4 +1,6 @@
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -6,17 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
 import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.concurrent.atomic.AtomicInteger;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main extends Application {
 
     public static void main(String[] args) {
-    launch(args);
+        launch(args);
     }
 
     @Override
@@ -36,7 +33,8 @@ public class Main extends Application {
         Label lastLabel = new Label("Ange Efternamn:");
         gridPane.setConstraints(lastLabel, 0, 2);
         TextField lastName = new TextField();
-        gridPane.setConstraints(lastName, 1,2);
+        lastName.setPromptText("Efternamn");
+        gridPane.setConstraints(lastName, 1, 2);
 
         Label phoneLabel = new Label("Ange telefonnummer:");
         gridPane.setConstraints(phoneLabel, 0, 3);
@@ -58,7 +56,6 @@ public class Main extends Application {
         TextField postAdressText = new TextField();
         gridPane.setConstraints(postAdressText, 1, 6);
 
-
         Button saveMember = new Button("Spara medlem");
         gridPane.setConstraints(saveMember, 1, 10);
 
@@ -66,60 +63,51 @@ public class Main extends Application {
         Label saveInLabel = new Label();
 
         saveMember.setOnAction(e -> {
-        //Få knappen att skriva Sparat och skriva ut text
             String s = "Sparat: " + firstName.getText() + ", " + lastName.getText() + ", " + phoneNumber.getText() + ", "
                     + adressText.getText() + ", " + postText.getText() + ", " + postAdressText.getText();
             saveInLabel.setText(s);
             gridPane.setConstraints(saveInLabel, 1, 7);
         });
 
-        Button start = new Button("Starta");
-        gridPane.setConstraints(start, 1, 11);
-        Label countL = new Label();
+        Button startButton = new Button("Starta");
+        gridPane.setConstraints(startButton, 1, 11);
 
-        Button stop = new Button("Stopp");
-        gridPane.setConstraints(stop, 2, 11);
+        Label timerLabel = new Label();
+        gridPane.setConstraints(timerLabel, 1, 13);
 
-        AtomicInteger counter = new AtomicInteger(0);
+        Button stopButton = new Button("Stopp");
+        gridPane.setConstraints(stopButton, 2, 11);
 
-                start.setOnAction(e -> {
-                    boolean running = (true);
-                    while (running) {
-                        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                        try {
-                            counter.incrementAndGet();
-                            Thread.sleep(1000);
-                            String time = format.format(counter.get());
-                            countL.setText(time);
-                            if (stop.isPressed()) {
-                                running = false;
-                                stop.setOnAction(ev -> {
-                                });
-                            }
-                        } catch (InterruptedException ex) {
-                        }
-                    }    
-            });
-            //new MyThread().start();
+        Stopwatch stopwatch = new Stopwatch();
 
-            //Tidtagarur
-            //trhreed sleep 1000 = sek
-            //label
-            //0000 sen sover tråden i en sekund 0001, atomicInteger som räknare, för att bli trådsäkert while loop
-            //låt tråden sova, sen öka, sen skriv ut i en Label
-            //stop.setCommand () stoppa loopen med en boolean
-            class MyThread extends Thread {
-                public void run() {
-                }
+        AnimationTimer timer = new AnimationTimer(){
+            @Override
+            public void handle(long l) {
+                runStopwatch(stopwatch, timerLabel);
             }
-        gridPane.getChildren().
+        };
+        startButton.setOnAction(e -> {
+            timer.start();
+        });
+        stopButton.setOnAction(e -> {
+            timer.stop();
+        });
+        gridPane.getChildren().addAll(firstLabel, firstName, lastLabel, lastName, phoneLabel, phoneNumber,
+                adressLabel, adressText, postLabel, postText, postAdressLabel, postAdressText,
+                saveMember, saveInLabel, newMember, startButton, stopButton, timerLabel);
 
-            addAll(firstLabel, firstName, lastLabel, lastName, phoneLabel, phoneNumber,
-                   adressLabel, adressText, postLabel, postText, postAdressLabel, postAdressText, saveMember, saveInLabel, newMember, start, stop, countL);
-
-            Scene scene = new Scene(gridPane, 300, 500);
+        Scene scene = new Scene(gridPane, 500, 600);
         stage.setScene(scene);
         stage.show();
+    }
 
+    private static void runStopwatch(Stopwatch stopwatch, Label timerLabel) {
+        stopwatch.increment();
+        Platform.runLater(() -> timerLabel.setText(stopwatch.showTime()));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+        }
     }
 }
+
